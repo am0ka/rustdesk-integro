@@ -23,6 +23,12 @@ jobs:
 
   build_topmost_window:
     uses: ./.github/workflows/third-party-RustDeskTempTopMostWindow.yml
+    with:
+      upload-artifact: true
+      target: windows-2022
+      configuration: Release
+      platform: x64
+      target_version: Windows10
 
   build_windows_x64_msi:
     needs: [generate_bridge, build_topmost_window]
