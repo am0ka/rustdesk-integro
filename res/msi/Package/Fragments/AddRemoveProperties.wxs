@@ -33,7 +33,7 @@
 		<!--$CustomClientPropsEnd$-->
 
 		<Property Id="APP_WINDOWS_INSTALLER" Secure="yes">
-			<RegistrySearch Id="AppWindowsInstallerFolderSearch" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\$(var.Product)" Name="WindowsInstaller" Type="raw" />
+			<RegistrySearch Id="AppWindowsInstallerFolderSearch" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\$(var.BinaryName)" Name="WindowsInstaller" Type="raw" />
 		</Property>
 	</Fragment>
 </Wix>

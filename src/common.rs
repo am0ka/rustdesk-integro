@@ -1231,9 +1231,16 @@ pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
     result
 }
 
+pub const DISPLAY_APP_NAME: &str = "Интегро-СБ Тех. Поддержка";
+
 #[inline]
 pub fn get_app_name() -> String {
     hbb_common::config::APP_NAME.read().unwrap().clone()
+}
+
+#[inline]
+pub fn get_display_app_name() -> String {
+    DISPLAY_APP_NAME.to_owned()
 }
 
 #[inline]
@@ -2515,7 +2522,39 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
+pub fn init_custom_branding() {
+    *config::APP_NAME.write().unwrap() = "IntegroSupport".to_owned();
+    *config::PROD_RENDEZVOUS_SERVER.write().unwrap() = "rustdesk.sarsen.dev".to_owned();
+    {
+        let mut overwrite = config::OVERWRITE_SETTINGS.write().unwrap();
+        overwrite.insert(
+            keys::OPTION_CUSTOM_RENDEZVOUS_SERVER.to_owned(),
+            "rustdesk.sarsen.dev".to_owned(),
+        );
+        overwrite.insert("relay-server".to_owned(), "rustdesk.sarsen.dev".to_owned());
+        overwrite.insert(
+            "key".to_owned(),
+            "PEQqZLYS6sG5YjYwO8tHLSl2pmmBEVkv0JUTzN0bigM=".to_owned(),
+        );
+    }
+    {
+        let mut hard = config::HARD_SETTINGS.write().unwrap();
+        hard.insert("conn-type".to_owned(), "incoming".to_owned());
+    }
+    {
+        let mut builtin = config::BUILTIN_SETTINGS.write().unwrap();
+        builtin.insert(keys::OPTION_HIDE_NETWORK_SETTINGS.to_owned(), "Y".to_owned());
+        builtin.insert(keys::OPTION_HIDE_SERVER_SETTINGS.to_owned(), "Y".to_owned());
+        builtin.insert(keys::OPTION_HIDE_PROXY_SETTINGS.to_owned(), "Y".to_owned());
+        builtin.insert(
+            keys::OPTION_HIDE_WEBSOCKET_SETTINGS.to_owned(),
+            "Y".to_owned(),
+        );
+    }
+}
+
 pub fn load_custom_client() {
+    init_custom_branding();
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());
